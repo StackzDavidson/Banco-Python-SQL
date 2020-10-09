@@ -72,7 +72,8 @@ class DataBase:
                 if len(resultado1) != 0:
                     depositar1 = f"UPDATE slogin SET saldo = saldo + '{deposito}' WHERE nome = '{nome_deposito}'"
                     cursor.execute(depositar1)
-                    print(f'Depósito No Valor de R${deposito:.2f} feito para a conta {nome_deposito} Efetuado com sucesso! ')
+                    print(
+                        f'Depósito No Valor de R${deposito:.2f} feito para a conta {nome_deposito} Efetuado com sucesso! ')
                     sys.exit()
                 else:
                     print('Erro Usuario não existe')
@@ -111,7 +112,8 @@ class DataBase:
                         if saque <= saldo:
                             retirada = f"UPDATE slogin SET saldo = saldo - '{saque}' WHERE nome = '{login}' AND senha = '{senha}'"
                             cursor.execute(retirada)
-                            print(f'Saque no valor de R${saque:.2f} Efetuado com suceso, seu saldo atual é de R${saldo:.2f}')
+                            print(
+                                f'Saque no valor de R${saque:.2f} Efetuado com suceso, seu saldo atual é de R${saldo:.2f}')
                         else:
                             pass
         except ValueError as error:
@@ -163,25 +165,33 @@ class DataBase:
             if self.logado:
                 trasnferencia = float(input('Quanto deseja tranferir R$: '))
                 para = input('Para quem deseja tranferir: ')
-                che_saldo = f"SELECT saldo FROM slogin WHERE nome = '{login}'"
-                cursor.execute(che_saldo)
-                resultados = cursor.fetchall()
-                for valor in resultados:
-                    for v1 in valor:
-                        if trasnferencia > v1:
-                            print('Saldo insuficiente')
-                            sys.exit()
-                        if trasnferencia <= v1:
-                            seleciona_conta_saida = f"UPDATE slogin SET saldo = saldo - '{trasnferencia}' WHERE nome = '{login}' AND senha = '{senha}'"
-                            seleciona_conta_recebimento = f"UPDATE slogin SET saldo = saldo + {trasnferencia} WHERE nome = '{para}'"
-                            cursor.execute(seleciona_conta_saida)
-                            cursor.execute(seleciona_conta_recebimento)
-                            saldo_restante = f"SELECT saldo FROM slogin WHERE nome = '{login}'"
-                            cursor.execute(saldo_restante)
-                            resultados1 = cursor.fetchall()
-                            for valores in resultados1:
-                                for r1 in valores:
-                                    print(f'Seu Saldo Após A transferencia é de R${r1:.2f}')
+                existe = f"SELECT nome FROM slogin WHERE nome = '{para}'"
+                cursor.execute(existe)
+                results = cursor.fetchall()
+                if len(results) != 0:
+                    che_saldo = f"SELECT saldo FROM slogin WHERE nome = '{login}'"
+                    cursor.execute(che_saldo)
+                    resultados = cursor.fetchall()
+                    for valor in resultados:
+                        for v1 in valor:
+                            if trasnferencia > v1:
+                                print('Saldo insuficiente')
+                                sys.exit()
+                            if trasnferencia <= v1:
+                                seleciona_conta_saida = f"UPDATE slogin SET saldo = saldo - '{trasnferencia}' WHERE nome = '{login}' AND senha = '{senha}'"
+                                seleciona_conta_recebimento = f"UPDATE slogin SET saldo = saldo + {trasnferencia} WHERE nome = '{para}'"
+                                cursor.execute(seleciona_conta_saida)
+                                cursor.execute(seleciona_conta_recebimento)
+                                saldo_restante = f"SELECT saldo FROM slogin WHERE nome = '{login}'"
+                                cursor.execute(saldo_restante)
+                                resultados1 = cursor.fetchall()
+                                for valores in resultados1:
+                                    for r1 in valores:
+                                        print(f'Seu Saldo Após A transferencia é de R${r1:.2f}')
+                            else:
+                                pass
+                else:
+                    print('Conta desatinatária não existe!')
         except ValueError as error:
             print('Valor Invalido')
 
@@ -194,8 +204,23 @@ class DataBase:
     REVERSE = "\033[;7m"
 
     def menu(self):
+        print(f"\"{self.RED}\n"
+              f"         \n"
+              f" .----------------.  .----------------.   .----------------.  .----------------.  .-----------------. .----------------. \n"
+              f"| .--------------. || .--------------. | | .--------------. || .--------------. || .--------------. || .--------------. |\n"
+              f"| |     ______   | || |    ______    | | | |   ______     | || |      __      | || | ____  _____  | || |  ___  ____   | |\n"
+              f"| |   .' ___  |  | || |  .' ____ \   | | | |  |_   _ \    | || |     /  \     | || ||_   \|_   _| | || | |_  ||_  _|  | |\n"
+              f"| |  / .'   \_|  | || |  | |____\_|  | | | |    | |_) |   | || |    / /\ \    | || |  |   \ | |   | || |   | |_/ /    | |\n"
+              f"| |  | |         | || |  | '____`'.  | | | |    |  __'.   | || |   / ____ \   | || |  | |\ \| |   | || |   |  __'.    | |\n"
+              f"| |  \ `.___.'\  | || |  | (____) |  | | | |   _| |__) |  | || | _/ /    \ \_ | || | _| |_\   |_  | || |  _| |  \ \_  | |\n"
+              f"| |   `._____.'  | || |  '.______.'  | | | |  |_______/   | || ||____|  |____|| || ||_____|\____| | || | |____||____| | |\n"
+              f"| |              | || |              | | | |              | || |              | || |              | || |              | |\n"
+              f"| '--------------' || '--------------' | | '--------------' || '--------------' || '--------------' || '--------------' |\n"
+              f" '----------------'  '----------------'   '----------------'  '----------------'  '----------------'  '----------------' \n"
+              f"\n"
+              f"        ")
         print(f'{self.GREEN}+-----------------------------------+\n'
-              '|              C6 BANK              |\n'        
+              '|              C6 BANK              |\n'
               '|    [1] LOGAR                      |\n'
               '|    [2] REGISTRAR                  |\n'
               '|    [3] SACAR                      |\n'
